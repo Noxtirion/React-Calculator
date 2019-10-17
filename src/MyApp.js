@@ -14,9 +14,27 @@ class MyApp extends React.Component {
    }
 
    componentDidUpdate() {
-      console.log(this.state.num1[0]);
       const count1 = this.state.num1;
       const count2 = this.state.num2;
+
+      (this.state.num1 === "NaN" ||
+         this.state.num1 === "Infinity" ||
+         this.state.num1 === "-Infinity") &&
+         this.setState({
+            num1: "",
+            sign: "",
+            num2: ""
+         });
+
+      if (count1 === "-" || count1 === "-0" || count1 === "-0.") {
+         this.setState({
+            num1: "0"
+         });
+      } else if (count2 === "-" || count2 === "-0" || count2 === "-0.") {
+         this.setState({
+            num2: "0"
+         });
+      }
 
       if (
          count1[0] === "0" &&
@@ -42,9 +60,8 @@ class MyApp extends React.Component {
    handleClick = e => {
       let num = e.target.name;
       let numType = Number(num);
-      console.log(typeof this.state.num1);
 
-      if (Number.isInteger(numType) && this.state.sign === "" && this.state.num1.length <= 22) {
+      if (Number.isInteger(numType) && this.state.sign === "" && this.state.num1.length <= 16) {
          this.setState(prevState => {
             return {
                num1: prevState.num1.concat(num)
@@ -57,7 +74,7 @@ class MyApp extends React.Component {
       } else if (
          Number.isInteger(numType) &&
          this.state.sign !== "" &&
-         this.state.num2.length <= 22
+         this.state.num2.length <= 16
       ) {
          this.setState(prevState => {
             return {
@@ -75,7 +92,7 @@ class MyApp extends React.Component {
       ) {
          dot = 0 + e.target.name;
       }
-      console.log(dot);
+
       if (
          (dot === "." || dot === "0.") &&
          !this.state.num1.includes(".") &&
@@ -104,8 +121,6 @@ class MyApp extends React.Component {
       let divide = (Number(this.state.num1) / Number(this.state.num2)).toString();
       let sum = (Number(this.state.num1) + Number(this.state.num2)).toString();
       let subtract = (Number(this.state.num1) - Number(this.state.num2)).toString();
-
-      console.log(this.state.sign.length);
 
       if (this.state.sign === "*") {
          this.setState({
@@ -139,7 +154,6 @@ class MyApp extends React.Component {
    };
 
    deleteNum = () => {
-      console.log(this.state.num1);
       if (this.state.num1 !== "" && this.state.sign === "") {
          this.setState(prevState => {
             return {
@@ -172,7 +186,6 @@ class MyApp extends React.Component {
    };
 
    render() {
-      console.log(this.state.num1);
       return (
          <div className="calculator">
             <Calc num1={this.state.num1} num2={this.state.num2} sign={this.state.sign} />
