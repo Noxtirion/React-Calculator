@@ -7,7 +7,9 @@ function Buttons(props) {
          <button name="reset" onClick={props.reset}>
             C
          </button>
-         <button name="del">DEL</button>
+         <button name="del" onClick={props.deleteNum}>
+            DEL
+         </button>
          <button name="/" onClick={props.handleClick}>
             /
          </button>
@@ -50,7 +52,9 @@ function Buttons(props) {
          <button name="=" onClick={props.result}>
             =
          </button>
-         <button name="">+-</button>
+         <button name="" onClick={props.reverseSign}>
+            +-
+         </button>
          <button className="0" name="0" onClick={props.handleClick}>
             0
          </button>
