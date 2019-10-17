@@ -4,30 +4,41 @@ import Buttons from "../src/components/Buttons";
 import "./style.css";
 
 class MyApp extends React.Component {
-   constructor() {
-      super();
+   constructor(props) {
+      super(props);
       this.state = {
-         num1: [],
+         num1: "",
          sign: "",
-         num2: []
+         num2: ""
       };
    }
 
    handleClick = e => {
       let num = e.target.name;
-      let buttonType = Number(num);
-      console.log(this.state.sign.length);
-      if ((Number.isInteger(buttonType) || num === ",") && this.state.sign.length === 0) {
+      let numType = Number(num);
+      console.log(this.state.num1);
+
+      if (this.state.num1.endsWith("0", 1) && !this.state.num1.endsWith("0.", 2)) {
+         this.setState({
+            num1: ""
+         });
+      } else if (this.state.num2.endsWith("0", 1) && !this.state.num2.endsWith("0.", 2)) {
+         this.setState({
+            num2: ""
+         });
+      }
+
+      if (Number.isInteger(numType) && this.state.sign === "") {
          this.setState(prevState => {
             return {
                num1: prevState.num1.concat(num)
             };
          });
-      } else if (!Number.isInteger(buttonType) && num !== ("reset", "del", ",")) {
+      } else if (!Number.isInteger(numType) && this.state.num1 !== "") {
          this.setState({
             sign: num
          });
-      } else {
+      } else if (this.state.sign !== "") {
          this.setState(prevState => {
             return {
                num2: prevState.num2.concat(num)
@@ -36,13 +47,88 @@ class MyApp extends React.Component {
       }
    };
 
+   comma = e => {
+      let dot = e.target.name;
+      if (
+         (this.state.num1 === "" && this.state.num2 === "") ||
+         (this.state.num1 !== "" && this.state.num2 === "" && this.state.sign !== "")
+      ) {
+         dot = 0 + e.target.name;
+      }
+      console.log(dot);
+      if (
+         (dot === "." || dot === "0.") &&
+         !this.state.num1.includes(".") &&
+         this.state.sign.length === 0
+      ) {
+         this.setState(prevState => {
+            return {
+               num1: prevState.num1.concat(dot)
+            };
+         });
+      } else if (
+         (dot === "." || dot === "0.") &&
+         !this.state.num2.includes(".") &&
+         this.state.sign.length !== 0
+      ) {
+         this.setState(prevState => {
+            return {
+               num2: prevState.num2.concat(dot)
+            };
+         });
+      }
+   };
+
+   result = () => {
+      let multiply = (Number(this.state.num1) * Number(this.state.num2)).toString();
+      let divide = (Number(this.state.num1) / Number(this.state.num2)).toString();
+      let sum = (Number(this.state.num1) + Number(this.state.num2)).toString();
+      let subtract = (Number(this.state.num1) - Number(this.state.num2)).toString();
+
+      console.log(this.state.sign.length);
+
+      if (this.state.sign === "*") {
+         this.setState({
+            num1: multiply,
+            num2: ""
+         });
+      } else if (this.state.sign === "/") {
+         this.setState({
+            num1: divide,
+            num2: ""
+         });
+      } else if (this.state.sign === "+") {
+         this.setState({
+            num1: sum,
+            num2: ""
+         });
+      } else if (this.state.sign === "-") {
+         this.setState({
+            num1: subtract,
+            num2: ""
+         });
+      }
+   };
+
+   reset = () => {
+      this.setState({
+         num1: "",
+         sign: "",
+         num2: ""
+      });
+   };
+
    render() {
-      const fullNum = this.state.num1.join("");
-      console.log(fullNum);
+      console.log(this.state.num1);
       return (
          <div className="calculator">
             <Calc num1={this.state.num1} num2={this.state.num2} sign={this.state.sign} />
-            <Buttons handleClick={this.handleClick} />
+            <Buttons
+               handleClick={this.handleClick}
+               result={this.result}
+               comma={this.comma}
+               reset={this.reset}
+            />
          </div>
       );
    }
