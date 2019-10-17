@@ -1,7 +1,6 @@
 import React from "react";
 
 function Calc(props) {
-   console.log(props);
    return (
       <div className="screen">
          <p className="view">{props.num1}</p>
@@ -12,3 +11,4 @@ function Calc(props) {
 }
 
 export default Calc;
+
