@@ -4,7 +4,9 @@ function Buttons(props) {
    console.log(props);
    return (
       <div className="keyboard">
-         <button name="reset">C</button>
+         <button name="reset" onClick={props.reset}>
+            C
+         </button>
          <button name="del">DEL</button>
          <button name="/" onClick={props.handleClick}>
             /
@@ -45,17 +47,15 @@ function Buttons(props) {
          <button name="3" onClick={props.handleClick}>
             3
          </button>
-         <button name="=" onClick={props.handleClick}>
+         <button name="=" onClick={props.result}>
             =
          </button>
-         <button name="" onClick={props.handleClick}>
-            +-
-         </button>
+         <button name="">+-</button>
          <button className="0" name="0" onClick={props.handleClick}>
             0
          </button>
-         <button name="," onClick={props.handleClick}>
-            ,
+         <button name="." onClick={props.comma}>
+            .
          </button>
       </div>
    );
