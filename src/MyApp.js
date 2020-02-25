@@ -1,39 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Calc from "../src/components/Calc";
 import Buttons from "../src/components/Buttons";
 import "./style.css";
 
-class MyApp extends React.Component {
-   constructor(props) {
-      super(props);
-      this.state = {
-         num1: "",
-         sign: "",
-         num2: ""
-      };
-   }
+function MyApp() {
+   const [num1, setNum1] = useState("");
+   const [sign, setSign] = useState("");
+   const [num2, setNum2] = useState("");
 
-   componentDidUpdate() {
-      const count1 = this.state.num1;
-      const count2 = this.state.num2;
+   console.log(num1);
+   useEffect(() => {
+      const count1 = num1;
+      const count2 = num2;
 
-      (this.state.num1 === "NaN" ||
-         this.state.num1 === "Infinity" ||
-         this.state.num1 === "-Infinity") &&
-         this.setState({
-            num1: "",
-            sign: "",
-            num2: ""
-         });
+      (num1 === "NaN" || num1 === "Infinity" || num1 === "-Infinity") &&
+         (setNum1("") && setSign("") && setNum2(""));
 
       if (count1 === "-" || count1 === "-0" || count1 === "-0.") {
-         this.setState({
-            num1: "0"
-         });
+         setNum1(0);
       } else if (count2 === "-" || count2 === "-0" || count2 === "-0.") {
-         this.setState({
-            num2: "0"
-         });
+         setNum2(0);
       }
 
       if (
@@ -42,164 +28,99 @@ class MyApp extends React.Component {
          count1[1] !== "." &&
          !count1.startsWith("0.", 2)
       ) {
-         this.setState({
-            num1: count1[1]
-         });
+         setNum1(count1[1]);
       } else if (
          count2[0] === "0" &&
          count2[1] !== undefined &&
          count2[1] !== "." &&
          !count2.startsWith("0.", 2)
       ) {
-         this.setState({
-            num2: count2[1]
-         });
+         setNum2(count2[1]);
       }
-   }
+   }, [num1, sign, num2]);
 
-   handleClick = e => {
+   const handleClick = e => {
       let num = e.target.name;
       let numType = Number(num);
 
-      if (Number.isInteger(numType) && this.state.sign === "" && this.state.num1.length <= 16) {
-         this.setState(prevState => {
-            return {
-               num1: prevState.num1.concat(num)
-            };
-         });
-      } else if (!Number.isInteger(numType) && this.state.num1 !== "") {
-         this.setState({
-            sign: num
-         });
-      } else if (
-         Number.isInteger(numType) &&
-         this.state.sign !== "" &&
-         this.state.num2.length <= 16
-      ) {
-         this.setState(prevState => {
-            return {
-               num2: prevState.num2.concat(num)
-            };
-         });
+      if (Number.isInteger(numType) && sign === "" && num1.length <= 16) {
+         setNum1(prevNum1 => prevNum1.concat(num));
+      } else if (!Number.isInteger(numType) && num1 !== "") {
+         setSign(num);
+      } else if (Number.isInteger(numType) && sign !== "" && num2.length <= 16) {
+         setNum2(prevNum2 => prevNum2.concat(num));
       }
    };
 
-   comma = e => {
+   const comma = e => {
       let dot = e.target.name;
-      if (
-         (this.state.num1 === "" && this.state.num2 === "") ||
-         (this.state.num1 !== "" && this.state.num2 === "" && this.state.sign !== "")
-      ) {
+      if ((num1 === "" && num2 === "") || (num1 !== "" && num2 === "" && sign !== "")) {
          dot = 0 + e.target.name;
       }
 
-      if (
-         (dot === "." || dot === "0.") &&
-         !this.state.num1.includes(".") &&
-         this.state.sign.length === 0
-      ) {
-         this.setState(prevState => {
-            return {
-               num1: prevState.num1.concat(dot)
-            };
-         });
-      } else if (
-         (dot === "." || dot === "0.") &&
-         !this.state.num2.includes(".") &&
-         this.state.sign.length !== 0
-      ) {
-         this.setState(prevState => {
-            return {
-               num2: prevState.num2.concat(dot)
-            };
-         });
+      if ((dot === "." || dot === "0.") && !num1.includes(".") && sign.length === 0) {
+         setNum1(prevNum1 => prevNum1.concat(dot));
+      } else if ((dot === "." || dot === "0.") && !num2.includes(".") && sign.length !== 0) {
+         setNum2(prevNum2 => prevNum2.concat(dot));
       }
    };
 
-   result = () => {
-      let multiply = (Number(this.state.num1) * Number(this.state.num2)).toString();
-      let divide = (Number(this.state.num1) / Number(this.state.num2)).toString();
-      let sum = (Number(this.state.num1) + Number(this.state.num2)).toString();
-      let subtract = (Number(this.state.num1) - Number(this.state.num2)).toString();
+   const result = () => {
+      let multiply = (Number(num1) * Number(num2)).toString();
+      let divide = (Number(num1) / Number(num2)).toString();
+      let sum = (Number(num1) + Number(num2)).toString();
+      let subtract = (Number(num1) - Number(num2)).toString();
 
-      if (this.state.sign === "*") {
-         this.setState({
-            num1: multiply,
-            num2: ""
-         });
-      } else if (this.state.sign === "/") {
-         this.setState({
-            num1: divide,
-            num2: ""
-         });
-      } else if (this.state.sign === "+") {
-         this.setState({
-            num1: sum,
-            num2: ""
-         });
-      } else if (this.state.sign === "-") {
-         this.setState({
-            num1: subtract,
-            num2: ""
-         });
+      if (sign === "*") {
+         setNum1(multiply);
+         setNum2("");
+      } else if (sign === "/") {
+         setNum1(divide);
+         setNum2("");
+      } else if (sign === "+") {
+         setNum1(sum);
+         setNum2("");
+      } else if (sign === "-") {
+         setNum1(subtract);
+         setNum2("");
       }
    };
 
-   reset = () => {
-      this.setState({
-         num1: "",
-         sign: "",
-         num2: ""
-      });
+   const reset = () => {
+      setNum1("");
+      setSign("");
+      setNum2("");
    };
 
-   deleteNum = () => {
-      if (this.state.num1 !== "" && this.state.sign === "") {
-         this.setState(prevState => {
-            return {
-               num1: prevState.num1.slice(0, prevState.num1.length - 1)
-            };
-         });
-      } else if (this.state.sign !== "") {
-         this.setState(prevState => {
-            return {
-               num2: prevState.num2.slice(0, prevState.num2.length - 1)
-            };
-         });
+   const deleteNum = () => {
+      if (num1 !== "" && sign === "") {
+         setNum1(prevNum1 => prevNum1.slice(0, prevNum1.length - 1));
+      } else if (sign !== "") {
+         setNum2(prevNum2 => prevNum2.slice(0, prevNum2.length - 1));
       }
    };
 
-   reverseSign = () => {
-      if (this.state.num1 !== "" && this.state.sign === "") {
-         this.setState(prevState => {
-            return {
-               num1: (parseFloat(prevState.num1) * -1).toString()
-            };
-         });
-      } else if (this.state.sign !== "" && this.state.num2 !== "") {
-         this.setState(prevState => {
-            return {
-               num2: (parseFloat(prevState.num2) * -1).toString()
-            };
-         });
+   const reverseSign = () => {
+      if (num1 !== "" && sign === "") {
+         setNum1(prevNum1 => (parseFloat(prevNum1) * -1).toString());
+      } else if (sign !== "" && num2 !== "") {
+         setNum2(prevNum2 => (parseFloat(prevNum2) * -1).toString());
       }
    };
 
-   render() {
-      return (
-         <div className="calculator">
-            <Calc num1={this.state.num1} num2={this.state.num2} sign={this.state.sign} />
-            <Buttons
-               handleClick={this.handleClick}
-               result={this.result}
-               comma={this.comma}
-               reset={this.reset}
-               reverseSign={this.reverseSign}
-               deleteNum={this.deleteNum}
-            />
-         </div>
-      );
-   }
+   return (
+      <div className="calculator">
+         <Calc num1={num1} num2={num2} sign={sign} />
+         <Buttons
+            handleClick={handleClick}
+            result={result}
+            comma={comma}
+            reset={reset}
+            reverseSign={reverseSign}
+            deleteNum={deleteNum}
+         />
+      </div>
+   );
 }
 
 export default MyApp;
