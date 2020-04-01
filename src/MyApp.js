@@ -8,13 +8,15 @@ function MyApp() {
    const [sign, setSign] = useState("");
    const [num2, setNum2] = useState("");
 
-   console.log(num1);
    useEffect(() => {
       const count1 = num1;
       const count2 = num2;
 
-      (num1 === "NaN" || num1 === "Infinity" || num1 === "-Infinity") &&
-         (setNum1("") && setSign("") && setNum2(""));
+      if (num1 === "NaN" || num1 === "Infinity" || num1 === "-Infinity") {
+         setNum1("");
+         setSign("");
+         setNum2("");
+      }
 
       if (count1 === "-" || count1 === "-0" || count1 === "-0.") {
          setNum1(0);
