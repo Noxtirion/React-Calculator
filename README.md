@@ -15,3 +15,7 @@
 -  HTML 5
 -  CSS 3
 -  React
+
+## Live
+
+[Live](https://blissful-meninsky-fa00a9.netlify.com/)
